@@ -1,6 +1,7 @@
 package business;
 
 import db.DBOperations;
+import db.DBOperationsSQLite;
 import launcher.Launcher;
 import model.Utilisateur;
 
@@ -10,7 +11,7 @@ import model.Utilisateur;
 
 //test SVN
 
-public class GestionUtilisateursImpl implements GestionUtilisateurs {
+public class GestionUtilisateursImpl {
 
 	private Launcher launcher;
 	
@@ -31,9 +32,22 @@ public class GestionUtilisateursImpl implements GestionUtilisateurs {
 	}
 
 
-	public boolean ajouterUtilisateur() {
-		//throw new NotImplementedException();
-		return false;
+	public boolean AjouterClient(String nom, String mail, String password) {
+		if ((nom == null) || (mail == null) || (mail == null)) {
+			return false;
+		}
+		if ((nom == "") || (mail == "") || (password == "")) {
+			return false;
+		}
+
+		Utilisateur nouveauUtilisateur = new Utilisateur();
+		nouveauUtilisateur.setNom(nom);
+		nouveauUtilisateur.setMail(mail);
+		nouveauUtilisateur.setPassword(password);
+
+		boolean resultatAjoutUtilisateurEnDB = launcher.getDBOperations().createUtilisateur(nouveauUtilisateur);
+		return resultatAjoutUtilisateurEnDB;
 	}
+	
 
 }
