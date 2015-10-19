@@ -13,12 +13,12 @@ import launcher.Launcher;
 public class TestGestionUtilisateursImpl {
 
 	private Launcher launcher;
-	private GestionUtilisateursImpl gestionUtilisateurs;
+	private GestionUtilisateurs gestionUtilisateurs;
 
 	@Before
 	public void setUp() throws Exception {
 		launcher = new Launcher();
-		gestionUtilisateurs = new GestionUtilisateursImpl(launcher);
+		gestionUtilisateurs = new GestionUtilisateurs(launcher);
 		System.out.println("Debut du test");
 	}
 

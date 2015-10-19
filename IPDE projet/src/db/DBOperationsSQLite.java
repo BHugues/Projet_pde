@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import model.Objet;
 import model.Utilisateur;
 
 /**
@@ -95,7 +96,7 @@ public class DBOperationsSQLite implements DBOperations {
 			connectionDB = DriverManager.getConnection(dbUrl);
 			connectionDB.setAutoCommit(true);
 						
-			requeteSQLPreparee = connectionDB.prepareStatement("INSERT INTO Clients(nom, mail, password) VALUES(?, ?, ?);");
+			requeteSQLPreparee = connectionDB.prepareStatement("INSERT INTO utilisateur(nom, mail, password) VALUES(?, ?, ?);");
 			requeteSQLPreparee.setString(1, newUtilisateur.getNom());
 			requeteSQLPreparee.setString(2, newUtilisateur.getMail());
 			requeteSQLPreparee.setString(3, newUtilisateur.getPassword());
@@ -156,6 +157,115 @@ public class DBOperationsSQLite implements DBOperations {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			return null;
 		}
+	}
+	
+	
+	public boolean createObjet(Objet newObjet) {
+		Connection connectionDB = null;
+		PreparedStatement requeteSQLPreparee = null;
+		
+		try {
+			connectionDB = DriverManager.getConnection(dbUrl);
+			connectionDB.setAutoCommit(true);
+						
+			requeteSQLPreparee = connectionDB.prepareStatement("INSERT INTO objet(nom_objet, prix) VALUES(?, ?);");
+			requeteSQLPreparee.setString(1, newObjet.getNom_objet());
+			requeteSQLPreparee.setFloat(2, newObjet.getPrix());
+						
+			// !!!
+			// ATTENTION, pour un INSERT sql, on n'utilise pas la méthode executeQuery, mais cette méthode ci (executeUpdate()) :
+			requeteSQLPreparee.executeUpdate();
+						
+			requeteSQLPreparee.close();
+			connectionDB.close();
+			
+			return true;
+	
+		} catch (Exception e) {
+			System.out.println("ERREUR OPERATION DB");
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+	
+	
+	public Objet getObjet(String nom, float prix) {
+		Connection c = null;
+		PreparedStatement stmt = null;
+
+		try {
+			Objet objet = null;
+			c = DriverManager
+					.getConnection(dbUrl);
+			c.setAutoCommit(false);
+			stmt = c.prepareStatement("SELECT * FROM objet WHERE nom_objet=? AND prix=?");
+			stmt.setString(1, nom);
+			stmt.setFloat(2, prix);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				int id = rs.getInt("id_objet");
+				String nomObjet = rs.getString("nom_objet");
+				float prixObjet = rs.getFloat("prix");
+				
+				objet = new Objet();
+				objet.setId_objet(id);
+				objet.setNom_objet(nomObjet);
+				objet.setPrix(prixObjet);
+				
+			}
+			return objet;
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			return null;
+		}
+	}
+	
+	
+	public LinkedList<Objet> getObjets() {
+
+		LinkedList<Objet> objets = new LinkedList<Objet>();
+		Connection c = null;
+		Statement stmt = null;
+
+		try {
+			c = DriverManager
+					.getConnection(dbUrl);
+			c.setAutoCommit(false);
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM objet;");
+
+			while (rs.next()) {
+				int id = rs.getInt("id_objet");
+				String nom = rs.getString("nom_objet");
+				float prix = rs.getFloat("prix");
+				
+				/*
+				System.out.println("ID = " + id_objet);
+				System.out.println("NOM = " + nom_objet);
+				System.out.println("PRIX = " + prix);
+				*/
+				Objet objet = new Objet();
+				objet.setId_objet(id);
+				objet.setNom_objet(nom);
+				objet.setPrix(prix);
+				
+				objets.add(objet);
+			}
+			
+			rs.close();
+			stmt.close();
+			c.close();
+			return (objets);
+	
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			return null;
+		}
+
 	}
 
 }

@@ -1,11 +1,10 @@
 package launcher;
 
 import ihm.ConnexionConsole;
+
 import ihm.ConnexionSwing;
 import business.GestionUtilisateurs;
-import business.GestionUtilisateursImpl;
 import db.DBOperations;
-import db.DBOperationsMock;
 import db.DBOperationsSQLite;
 
 public class Launcher {
@@ -20,7 +19,7 @@ public class Launcher {
 		// dBOperations=new DBOperationsMock();
 		dBOperations = new DBOperationsSQLite();
 
-		gestionUtilisateurs = new GestionUtilisateursImpl(this);
+		gestionUtilisateurs = new GestionUtilisateurs(this);
 
 		// CHOIX INTERFACE SWING/CONSOLE
 		connexionSwing = new ConnexionSwing(this);

@@ -11,11 +11,11 @@ import model.Utilisateur;
 
 //test SVN
 
-public class GestionUtilisateursImpl {
+public class GestionUtilisateurs {
 
 	private Launcher launcher;
 	
-	public GestionUtilisateursImpl(Launcher l){
+	public GestionUtilisateurs(Launcher l){
 		this.launcher=l;
 	}
 	
@@ -33,7 +33,7 @@ public class GestionUtilisateursImpl {
 
 
 	public boolean AjouterClient(String nom, String mail, String password) {
-		if ((nom == null) || (mail == null) || (mail == null)) {
+		if ((nom == null) || (mail == null) || (password == null)) {
 			return false;
 		}
 		if ((nom == "") || (mail == "") || (password == "")) {
@@ -48,6 +48,7 @@ public class GestionUtilisateursImpl {
 		boolean resultatAjoutUtilisateurEnDB = launcher.getDBOperations().createUtilisateur(nouveauUtilisateur);
 		return resultatAjoutUtilisateurEnDB;
 	}
+	
 	
 
 }
